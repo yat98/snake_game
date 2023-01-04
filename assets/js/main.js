@@ -69,6 +69,17 @@ const draw = () => {
     newSnakeCharY < boxSize * 3 ||
     newSnakeCharY > boxSize * 17
   ) {
+    ctx.fillStyle = 'maroon';
+    ctx.font = '80px helvetica';
+    ctx.fillText('GAME OVER', 2.2 * boxSize, 11 * boxSize);
+
+    ctx.fillStyle = 'maroon';
+    ctx.font = '20px helvetica';
+    ctx.fillText(
+      'Reload the browser to restart the game',
+      4.4 * boxSize,
+      12 * boxSize
+    );
     audio.gameOver.play();
     clearInterval(game);
   }
