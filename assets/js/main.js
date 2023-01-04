@@ -50,6 +50,7 @@ const draw = () => {
   else if (keyDirection === 'BOTTOM') newSnakeCharY += boxSize;
 
   if (newSnakeCharX === foodChar.x && newSnakeCharY === foodChar.y) {
+    audio.eat.play();
     score++;
     foodChar = generateFood();
   } else {
@@ -67,8 +68,10 @@ const draw = () => {
     newSnakeCharX > boxSize * 17 ||
     newSnakeCharY < boxSize * 3 ||
     newSnakeCharY > boxSize * 17
-  )
+  ) {
+    audio.gameOver.play();
     clearInterval(game);
+  }
 
   snakeChar.unshift(snakeNewHead);
 
@@ -85,13 +88,19 @@ const draw = () => {
 };
 
 const direction = (event) => {
-  if (event.keyCode === 37 && keyDirection != 'RIGHT') keyDirection = 'LEFT';
-  else if (event.keyCode === 38 && keyDirection != 'BOTTOM')
+  if (event.keyCode === 37 && keyDirection != 'RIGHT') {
+    audio.leftMove.play();
+    keyDirection = 'LEFT';
+  } else if (event.keyCode === 38 && keyDirection != 'BOTTOM') {
+    audio.topMove.play();
     keyDirection = 'UP';
-  else if (event.keyCode === 39 && keyDirection != 'LEFT')
+  } else if (event.keyCode === 39 && keyDirection != 'LEFT') {
+    audio.rightMove.play();
     keyDirection = 'RIGHT';
-  else if (event.keyCode === 40 && keyDirection != 'UP')
+  } else if (event.keyCode === 40 && keyDirection != 'UP') {
+    audio.bottomMove.play();
     keyDirection = 'BOTTOM';
+  }
 };
 
 const game = setInterval(draw, 100);
