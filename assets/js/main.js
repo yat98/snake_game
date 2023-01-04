@@ -19,9 +19,14 @@ let foodChar = generateFood();
 let keyDirection = '';
 let score = 0;
 
+const hit = (head, snakes) => {
+  for (let i = 0; i < snakes.length; i++) {
+    if (head.x === snakes[i].x && head.y === snakes[i].y) return true;
+  }
+  return false;
+};
+
 const draw = () => {
-  let highScore = localStorage.getItem('highscore') || 0;
-  if (score > highScore) localStorage.setItem('highscore', score);
   const snake = document.getElementById('snake');
   const ctx = snake.getContext('2d');
 
@@ -36,14 +41,6 @@ const draw = () => {
   });
 
   ctx.drawImage(image.food, foodChar.x, foodChar.y);
-
-  ctx.fillStyle = 'white';
-  ctx.font = '30px helvetica';
-  ctx.fillText(score, 2 * boxSize, 1.6 * boxSize);
-
-  ctx.fillStyle = 'white';
-  ctx.font = '30px helvetica';
-  ctx.fillText(highScore, 4.8 * boxSize, 1.6 * boxSize);
 
   let newSnakeCharX = snakeChar[0].x;
   let newSnakeCharY = snakeChar[0].y;
@@ -63,7 +60,28 @@ const draw = () => {
     x: newSnakeCharX,
     y: newSnakeCharY,
   };
+
+  if (
+    hit(snakeNewHead, snakeChar) ||
+    newSnakeCharX < boxSize ||
+    newSnakeCharX > boxSize * 17 ||
+    newSnakeCharY < boxSize * 3 ||
+    newSnakeCharY > boxSize * 17
+  )
+    clearInterval(game);
+
   snakeChar.unshift(snakeNewHead);
+
+  let highScore = localStorage.getItem('highscore') || 0;
+  if (score > highScore) localStorage.setItem('highscore', score);
+
+  ctx.fillStyle = 'white';
+  ctx.font = '30px helvetica';
+  ctx.fillText(score, 2 * boxSize, 1.6 * boxSize);
+
+  ctx.fillStyle = 'white';
+  ctx.font = '30px helvetica';
+  ctx.fillText(highScore, 4.8 * boxSize, 1.6 * boxSize);
 };
 
 const direction = (event) => {
