@@ -10,17 +10,18 @@ snakeChar[0] = {
   y: 10 * boxSize,
 };
 
-const foodChar = {
+const generateFood = () => ({
   x: Math.floor(Math.random() * 17 + 1) * boxSize,
   y: Math.floor(Math.random() * 15 + 3) * boxSize,
-};
+});
+let foodChar = generateFood();
 
 let keyDirection = '';
 let score = 0;
-let highScore = localStorage.getItem('highscore') || 0;
-if (score > highScore) localStorage.setItem('highscore', score);
 
 const draw = () => {
+  let highScore = localStorage.getItem('highscore') || 0;
+  if (score > highScore) localStorage.setItem('highscore', score);
   const snake = document.getElementById('snake');
   const ctx = snake.getContext('2d');
 
@@ -51,7 +52,13 @@ const draw = () => {
   else if (keyDirection === 'RIGHT') newSnakeCharX += boxSize;
   else if (keyDirection === 'BOTTOM') newSnakeCharY += boxSize;
 
-  snakeChar.pop();
+  if (newSnakeCharX === foodChar.x && newSnakeCharY === foodChar.y) {
+    score++;
+    foodChar = generateFood();
+  } else {
+    snakeChar.pop();
+  }
+
   const snakeNewHead = {
     x: newSnakeCharX,
     y: newSnakeCharY,
@@ -65,7 +72,7 @@ const direction = (event) => {
     keyDirection = 'UP';
   else if (event.keyCode === 39 && keyDirection != 'LEFT')
     keyDirection = 'RIGHT';
-  else if (event.keyCode === 40 && keyDirection != 'TOP')
+  else if (event.keyCode === 40 && keyDirection != 'UP')
     keyDirection = 'BOTTOM';
 };
 
